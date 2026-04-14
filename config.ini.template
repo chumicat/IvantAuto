@@ -1,0 +1,48 @@
+[host]
+; Enter the server URL exactly as shown in the Ivanti Secure Access Client UI.
+; Do NOT add http:// or https:// unless your client UI shows them.
+; Example (bare hostname):  url = vpn.yourcompany.com
+; Example (with path):      url = vpn.yourcompany.com/portal
+url = vpn.yourcompany.com
+; An internal hostname only reachable via VPN, used to detect if already connected
+test_domain = internal.yourcompany.com
+
+[auth]
+username = your_username
+; The authentication realm configured on the Ivanti gateway
+realm = Users
+
+[start]
+; Leave blank to auto-detect pulselauncher.exe in default install locations
+pulselauncher_path =
+
+[options]
+; Injection strategy: "window" (pywinauto, precise) or "loop" (process poll, simpler fallback)
+injection_strategy = window
+; Seconds to wait for the OTP dialog before giving up
+otp_dialog_timeout = 60
+; Minutes between reconnections (Ivanti session lasts 60 min, reconnect at 55)
+reconnect_interval_min = 55
+; Seconds to wait for VPN connectivity after TOTP injection (increase if your network is slow)
+connect_verify_timeout = 60
+; How many times to retry if TOTP injection succeeds but VPN does not connect (e.g. server rejected the code)
+connect_max_retries = 2
+; Custom OTP dialog title substrings (comma-separated, optional override)
+; otp_window_titles = Secondary Authentication, Enter Passcode
+; Disconnect before the very first connect attempt (connect and daemon commands).
+; Ensures a clean state if a stale connection or UI exists at startup.
+clean_start = false
+
+[daemon]
+; Daemon mode: "heartbeat" (monitors connectivity, reconnects on failure)
+;              "interval" (fixed timer, reconnects every reconnect_interval_min minutes)
+; Can also be set at runtime with: ivantauto daemon --mode heartbeat
+daemon_mode = heartbeat
+; Seconds between heartbeat pings (only used in heartbeat mode)
+heartbeat_interval_sec = 5
+; Number of consecutive heartbeat failures before triggering a reconnect
+heartbeat_fail_threshold = 3
+; Force a disconnect before every reconnect cycle.
+; In heartbeat mode: also forces a periodic reconnect every reconnect_interval_min minutes.
+; Can also be set at runtime with: ivantauto daemon --force-reconnect
+force_reconnect = false
