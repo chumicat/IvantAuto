@@ -26,12 +26,22 @@ lab environments (e.g. Ollama models) without manual reconnection every hour.
 
 ## Installation
 
+### Option A — pip + git (no clone needed)
+
 ```bat
-git clone <this repo>
+pip install git+https://github.com/chumicat/IvantAuto.git
+```
+
+This installs the `ivantauto` CLI command directly. You still need to create a `config.ini` (see Quick Start below).
+
+### Option B — clone and install (editable)
+
+```bat
+git clone https://github.com/chumicat/IvantAuto.git
 cd IvantAuto
 
 python -m venv .venv
-.venv\Scripts\pip install -r requirements.txt
+.venv\Scripts\pip install -e .
 ```
 
 ---
