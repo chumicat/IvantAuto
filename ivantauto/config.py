@@ -44,6 +44,7 @@ class Config:
     daemon_mode: str = "heartbeat"
     heartbeat_interval_sec: int = 5
     heartbeat_fail_threshold: int = 3
+    quick_reconnect_after_sec: int = 0
 
 
 def _find_exe(candidates: list[str]) -> Optional[str]:
@@ -116,6 +117,7 @@ def load(config_path: str = "config.ini") -> Config:
         raise ConfigError(f"Invalid daemon_mode: {daemon_mode} (use 'heartbeat' or 'interval')")
     heartbeat_interval_sec = cp.getint("daemon", "heartbeat_interval_sec", fallback=5)
     heartbeat_fail_threshold = cp.getint("daemon", "heartbeat_fail_threshold", fallback=3)
+    quick_reconnect_after_sec = cp.getint("daemon", "quick_reconnect_after_sec", fallback=0)
 
     return Config(
         vpn_url=vpn_url,
@@ -135,4 +137,5 @@ def load(config_path: str = "config.ini") -> Config:
         daemon_mode=daemon_mode,
         heartbeat_interval_sec=heartbeat_interval_sec,
         heartbeat_fail_threshold=heartbeat_fail_threshold,
+        quick_reconnect_after_sec=quick_reconnect_after_sec,
     )

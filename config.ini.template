@@ -42,6 +42,11 @@ daemon_mode = heartbeat
 heartbeat_interval_sec = 5
 ; Number of consecutive heartbeat failures before triggering a reconnect
 heartbeat_fail_threshold = 3
+; After this many seconds since the last reconnect, a single heartbeat failure
+; triggers an immediate reconnect instead of waiting for the full threshold.
+; 0 = disabled (default). Set to e.g. 3540 for a 60-min VPN session to react
+; instantly in the last minute, or 7140 for a 2-hr session, etc.
+; quick_reconnect_after_sec = 0
 ; Force a disconnect before every reconnect cycle.
 ; In heartbeat mode: also forces a periodic reconnect every reconnect_interval_min minutes.
 ; Can also be set at runtime with: ivantauto daemon --force-reconnect

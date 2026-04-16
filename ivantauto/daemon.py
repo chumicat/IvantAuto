@@ -217,9 +217,17 @@ def _run_heartbeat_daemon(config: Config, force_reconnect: bool, clean_start: bo
                 continue
 
             consecutive_failures += 1
-            log.warning(f"Heartbeat failed ({consecutive_failures}/{threshold}).")
 
-            if consecutive_failures < threshold:
+            effective_threshold = threshold
+            if config.quick_reconnect_after_sec > 0:
+                elapsed = (datetime.now() - last_forced).total_seconds()
+                if elapsed >= config.quick_reconnect_after_sec:
+                    effective_threshold = 1
+                    log.debug(f"Quick-reconnect window active: {elapsed:.0f}s >= {config.quick_reconnect_after_sec}s — threshold reduced to 1.")
+
+            log.warning(f"Heartbeat failed ({consecutive_failures}/{effective_threshold}).")
+
+            if consecutive_failures < effective_threshold:
                 continue
 
             # Threshold reached — reconnect
